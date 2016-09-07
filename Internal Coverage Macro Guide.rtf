@@ -1,0 +1,67 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\f0\b\fs28 \cf0 Internal Coverage Macro:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\b0\fs24 \cf0 The Internal Coverage Macro was designed to generate and analyze a series of square regions of interest (ROI), or boxes, in a user defined area.  It generates a binary, yes or no, tally for whether each square ROI contains or does not contain a cell, cell process, etc., based on user given criteria.  Specifically, it was designed to analyzed the coverage of class IV dendritic arborization neurons.  It is particularly useful for quickly generating and analyzing large areas containing numerous, small ROI precisely and accurately.  The program labels ROI squares that are not positive for a criteria a color, and can be specified to mark positively marked squares as well.  The macro was built around analyzing light samples or traces over dark backgrounds.  
+\b\fs28 \
+\
+Installation:
+\b0\fs24 \
+First, put the InternalCoverageMacro.txt file into the ImageJ macros file (for Mac: Applications/ImageJ/macros).  To run the macro, have an image open in ImageJ or FIJI, then select Plugins>Macros>Run, then select Internal Coverage Macro.txt.  You may also install it temporarily in the Macro list with Plugins>Macros>InstalI.  For frequent use you could input a keyboard shortcut in Plugins>Macro>Startup Macros\'85 such as:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl288\slmult1\pardirnatural
+
+\fs28 \cf0 macro "Macro box [q]\'94 \{ \
+\'a0 \'a0 \'a0 \'a0 runMacro("/Applications/ImageJ/macros/InternalCoverageMacro.txt");\
+\'a0 \'a0 \'a0\} \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\b\fs28 \cf0 Using the Macro:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\b0\fs24 \cf0 With an image open, use a selection tool to define your primary ROI selection.  The \'93Polygons selections\'94 tool is recommended.  The macro will later input a grid of ROI based on the primary ROI selection.  While you do not need to Threshold images, if you do so, make sure to select \'93Dark Background\'94 before Thresholding.  Thresholding in this way will invert the colors of the image, but not the values.  The grid dimension section lets you input the size, in pixels, of given ROI.  For example, if you put in 10, each grid ROI will be 10 pixels wide and 10 pixels high, 100 pixels^2.  The threshold sets the lower minimum brightness value that the macro will consider \'93positive.\'94  Both grayscale and color images may be used.  All ROI generated with a minimum brightness value below this will be considered \'93negative.\'94  The \'93minimum external null box area\'94 will work with the \'93clear outside box selection\'94 box to discount negative boxes that are small.  Negative ROI with an area smaller than the given value will not be counted.  While I do not use this function, it is easy to imagine that this could be useful for very complex primary ROI.  Lastly, if you want the positive ROI not to be colored in, you may uncheck the last box, \'93fill negative boxes.\'94\
+\
+Next, you have some choices for the analysis.  While the macro will automatically add your primary selection to the ROI manager, if you have added your selection to the ROI manager, by pressing t, or you have loaded your primary selection ROI into the ROI manager as the only ROI, you may check the \'93selection already added to the ROI manager\'94 box.  If you are analyzing a subset of an image, or your selection is not rectangular, you may select the \'93clear outside of selection\'94 box.  If you want to visualize the positively called ROI, you may check the \'93fill positive boxes,\'94 but it is recommended only for presentation purposes or for checking the macro\'92s counts.  Lastly, and most importantly, you may check the \'93remove null boxes outside of selection\'94 to tell the macro not to mark or tally the negative ROI outside of the overall ROI.  This is highly recommended if your selection is not rectangular.  \
+\
+Important: the macro will generate ROI as if the primary selection was a rectangle.  Therefore, if you are 
+\i not
+\i0  using the rectangle select tool, checking both \'93clear outside of selection\'94 and \'93remove null boxes outside of selection\'94 is strongly recommended.  This will prevent unwanted positive counts.  I recommend the \'93Polygon selections\'94 tool for setting up the primary ROI.\
+\
+Important: the macro will generate as many ROI as will fit in the primary selection as if it were a rectangle.  Therefore, the bottom row and the rightmost column of ROI may not fit within the primary ROI.  Checking \'93clear outside of selection\'94 will remove the possibility of unwanted positive counts in this circumstance.  If you plan on using a defined ROI size, consider using my Enter Box Dimensions Macro to define your primary ROI.\
+\
+Important: the macro may have issues if you decide to analyze the entire image.  I recommend that you copy and paste the image into a larger image, such as with File>New>Image\'85, then analyze it with the above tools.  \
+\
+Once OK is clicked, the macro will tally up the number of positive and negative ROI and return these values and proportions in the Results and the Log.  The Results values may be copied and pasted into a spreadsheet. \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\b\fs28 \cf0 Using the ROI manager with the macro:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\b0\fs24 \cf0 This macro makes use of the ROI Manager to set up ROI.  After you set your primary ROI, you may want to place this into the ROI manager by pressing t.  The ROI will be given a title and placed in the ROI manager, where it can be saved by clicking More>Save in the ROI Manager.  You may also load an ROI from the same menu.  Once the macro is running, it will populate the ROI manager with ROI within the primary ROI.  Checking \'93Show All\'94 will display the ROI, and Flatten will create a new image with the ROI marked.  Before flattening, you can change the appearance of the ROI with the Properties\'85 button in the ROI Manager.  Be sure to delete the ROI between analyses.  \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+
+\b\fs28 \cf0 Contact and Citation
+\b0\fs24 \
+If you are having difficulties, feel free to e-mail me at jcs141@case.edu with the subject heading \'93Internal Coverage Macro.\'94  I welcome suggestions for future features as well.  For future versions I plan on allowing the user to switch to using dark samples or traces over a light background, and to allow the user to set the upper threshold for positive calls.  \
+\
+If you find this Macro useful in work that you plan on publishing, please cite the paper in which it was initially published: \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 FoxO regulates microtubule dynamics and polarity to promote dendrite branching in Drosophila sensory neurons.  Sears JC and Broihier HT. PMID 27546375\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\sl288\slmult1\pardirnatural
+\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 Your consideration is most appreciated!
+\b \
+\
+
+\b0 \
+\
+\
+}

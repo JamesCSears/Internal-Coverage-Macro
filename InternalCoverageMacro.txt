@@ -1,0 +1,107 @@
+PositiveROI = 0;
+NegativeROI = 0;
+ProportionPositive = 0;
+ProportionNegative = 0;
+TotalCountedGrid = 0;
+
+Dialog.create("Internal Coverage Macro");
+Dialog.addNumber("grid dimension", 58);
+Dialog.addNumber("threshold", 5);
+Dialog.addNumber("minimum external null box area", 0);
+Dialog.addCheckbox("selection already added to ROI manager", false) ;
+Dialog.addCheckbox("clear outside of selection", false);
+Dialog.addCheckbox("fill positive boxes", false);
+Dialog.addCheckbox("remove null boxes outside of selection", false);
+Dialog.addCheckbox("fill negative boxes", true);
+Dialog.show();
+
+entergriddimension = Dialog.getNumber();
+enterthreshold = Dialog.getNumber();
+enterminimumnegativebox = Dialog.getNumber();
+initialroientered = Dialog.getCheckbox();
+clearoutside = Dialog.getCheckbox();
+fillpositiveboxes = Dialog.getCheckbox();
+removenullboxesoutsideselection = Dialog.getCheckbox();
+fillnegativeboxes = Dialog.getCheckbox();
+
+getSelectionBounds(x, y, width, height);
+
+if (initialroientered==0)
+{
+	roiManager("Add");
+}
+
+if (clearoutside ==1)
+{
+	roiManager("select", 0);
+	run("Clear Outside");
+}
+
+numrows = width/entergriddimension;
+numcolumns = height/entergriddimension;
+
+for(i = 0; i < numrows; i++){
+for(j = 0; j < numcolumns; j++){
+	NextRow = i * (entergriddimension);
+	NextColumn = j * (entergriddimension);
+	makeRectangle(x + NextRow, y + NextColumn, entergriddimension, entergriddimension);
+	roiManager("Add");
+}
+}
+
+setColor(80,0,80);
+
+n = roiManager("count");
+for(i=1;i<n;i++){
+	roiManager("select", i);
+	getRawStatistics(area, mean, min, max, std, histogram);
+		if (max>enterthreshold)
+		{
+			PositiveROI +=1;
+			if (fillpositiveboxes==1)
+			{
+				fill();
+}	
+}			
+}
+
+setColor(0,255,0);
+
+for(i=1;i<n;i++){
+	if (removenullboxesoutsideselection==false)
+	{
+		roiManager("select", i);
+	}
+	if (removenullboxesoutsideselection==true)
+	{
+		roiManager("select", newArray(i,0));
+		roiManager("AND");
+	}
+	getRawStatistics(area, mean, min, max, std, histogram);
+		if (max<enterthreshold) 
+		if (area>enterminimumnegativebox)
+		{
+			NegativeROI +=1;
+				if (fillnegativeboxes==true)
+				{
+					roiManager("select", i);
+					fill();
+}
+}
+}
+
+TotalCountedGrid = PositiveROI + NegativeROI;
+ProportionPositive = PositiveROI/TotalCountedGrid;
+ProportionNegative = NegativeROI/TotalCountedGrid;
+
+print("Positive Grid Spaces", PositiveROI);
+print("Negative Grid Spaces", NegativeROI);
+print("Positive and Negative Grid Spaces", TotalCountedGrid);
+print("Proportion Positive", ProportionPositive);
+print("Proportion Negative", ProportionNegative);
+	
+setResult("+ Spaces", 0, PositiveROI);
+setResult("- Spaces",0, NegativeROI);
+setResult("Counted Spaces",0, TotalCountedGrid);
+setResult("PROP Positive",0, ProportionPositive);
+setResult("PROP Negative", 0,ProportionNegative);
